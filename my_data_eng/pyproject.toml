@@ -1,0 +1,22 @@
+[project]
+name = "my-data-eng"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "fv-kalashikk"}
+]
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "jupyterlab (>=4.4.7,<5.0.0)",
+    "pandas (>=2.3.2,<3.0.0)",
+    "matplotlib (>=3.10.6,<4.0.0)",
+    "wget (>=3.2,<4.0)"
+]
+
+[tool.poetry]
+packages = [{include = "my_data_eng", from = "src"}]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
