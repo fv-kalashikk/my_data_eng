@@ -1,0 +1,21 @@
+# Данные
+data/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Системные файлы macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+.env
+venv/
+
+# IDE
+.vscode/
+.idea/
+
+# Логи
+*.log
