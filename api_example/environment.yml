@@ -1,0 +1,9 @@
+name: api_example
+channels:
+  - defaults
+dependencies:
+  - python=3.9
+  - pandas
+  - requests
+  - jupyter
+prefix: /opt/anaconda3/envs/api_example
