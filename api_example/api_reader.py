@@ -84,7 +84,7 @@ def get_anime_details(anime_list):
 
 detailed_anime_list = get_anime_details(anime_list)
 
-from IPython.display import display
+from IPython.display import display  # для красивого вывода
 
 if detailed_anime_list:
     detailed_df = pd.DataFrame(detailed_anime_list)
