@@ -1,5 +1,6 @@
 # Данные
 data/
+raw_data_EDA.ipynb/
 
 # Jupyter Notebook
 .ipynb_checkpoints/
