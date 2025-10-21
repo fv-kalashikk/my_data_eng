@@ -20,3 +20,11 @@ venv/
 
 # Логи
 *.log
+
+# Базы данных и пароли
+creds.db
+*.db
+*.sqlite
+*.sqlite3
+config.ini
+secrets.ini
