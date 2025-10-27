@@ -1,77 +1,66 @@
+import os
+from dotenv import load_dotenv
+from sqlalchemy import create_engine, text, inspect
+from sqlalchemy.orm import Session
 import pandas as pd
-import sqlite3
-from sqlalchemy import create_engine
 
 
 def write_to_homeworks():
-    # 1) читаем данные из creds.db
-    try:
-        conn_sqlite = sqlite3.connect("creds.db")
-        cursor = conn_sqlite.cursor()
-        cursor.execute("SELECT url, port, user, pass FROM access;")
-        url, port, username, password = cursor.fetchone()
-        conn_sqlite.close()
-        print("Данные из creds.db получены")
-    except Exception as e:
-        print(f"!!!!!!!! Ошибка чтения creds.db: {e}")
+    """
+    Функция записывает данные в базу homeworks
+    """
+    load_dotenv()
+
+    db_user = os.getenv("db_user")
+    db_password = os.getenv("db_password")
+    db_url = os.getenv("db_url")
+    db_port = os.getenv("db_port")
+    db_name = os.getenv("db_name")
+
+    if not all([db_user, db_password, db_url, db_port, db_name]):
+        print("!!!!!!!! Не все переменные найдены в .env")
         return
 
-    # 2) загружаем данные из disease_risk_processed.parquet
+    # подключение к базе
+    try:
+        engine = create_engine(
+            f"postgresql+psycopg2://{db_user}:{db_password}@{db_url}:{db_port}/{db_name}"
+        )
+    except Exception as e:
+        print(f"!!!!!!!! Ошибка подключения: {e}")
+        return
+
+    # загрузка данных
     try:
         df_clean = pd.read_parquet("./data/processed/disease_risk_processed.parquet")
-        data_to_write = df_clean.head(100)
+        df_for_upload = df_clean.head(100)
     except Exception as e:
         print(f"!!!!!!!! Ошибка загрузки данных: {e}")
         return
 
-    # 3) подключаемся к homeworks и записываем
-    table_name = "kalashnikova"
+    # запись данных
     try:
-        connection_string = f"postgresql://{username}:{password}@{url}:{port}/homeworks"
-        engine = create_engine(connection_string)
-
-        data_to_write.to_sql(
-            name=table_name,
+        df_for_upload.to_sql(
+            name="kalashnikova",
             con=engine,
             schema="public",
             if_exists="replace",
             index=False,
-            method="multi",
         )
-
-        print(f" Данные записаны. Таблица: public.{table_name}")
-        print(f" Записано строк: {len(data_to_write)}")
-
-        # проверка
-        verify_data(engine, table_name)
-
     except Exception as e:
-        print(f"!!!!!!!! Ошибка записи в базу: {e}")
+        print(f"!!!!!!!! Ошибка записи: {e}")
+        return
 
-
-def verify_data(engine, table_name):
-    """
-    Проверяем что данные записались правильно
-    """
+    # проверка записи
     try:
-        # считаем строки
-        count_query = f"SELECT COUNT(*) as row_count FROM public.{table_name};"
-        count_result = pd.read_sql(count_query, engine)
-        row_count = count_result["row_count"].iloc[0]
+        with engine.begin() as conn:
+            result = conn.execute(text("SELECT COUNT(*) FROM kalashnikova"))
+            count = result.scalar()
 
-        print(f"В таблице: {row_count} строк")
-
-        if row_count == 100:
-            print("Записано ровно 100 строк")
-        else:
-            print(f"!!!!!!!! Записано {row_count} строк вместо 100")
-
-        # первые 3 строки
-        sample_query = f"SELECT * FROM public.{table_name} LIMIT 3;"
-        sample_data = pd.read_sql(sample_query, engine)
-        print("Пример данных (первые 3 строки):")
-        print(sample_data)
-
+            if count == 100:
+                print(f"Проверка пройдена: {count} строк записано")
+            else:
+                print(f"!!!!!!!! Ошибка: записано {count} строк вместо 100")
     except Exception as e:
         print(f"!!!!!!!! Ошибка проверки: {e}")
 

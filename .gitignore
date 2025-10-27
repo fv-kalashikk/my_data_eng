@@ -28,3 +28,4 @@ creds.db
 *.sqlite3
 config.ini
 secrets.ini
+create_env.py
