@@ -1,9 +1,14 @@
 # Данные
 data/
-raw_data_EDA.ipynb/
+
 
 # Jupyter Notebook
 .ipynb_checkpoints/
+raw_data_EDA.ipynb
+dde_itmo.ipynb
+
+# Папка src
+src/
 
 # Системные файлы macOS
 .DS_Store
