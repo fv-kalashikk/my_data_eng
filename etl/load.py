@@ -53,7 +53,7 @@ def load_data_to_db(processed_data, max_rows=100):
 
     try:
         df_for_upload.to_sql(
-            name="kalashnikova",
+            name="kalashnikova",  # имя таблицы
             con=engine,
             schema="public",
             if_exists="replace",
