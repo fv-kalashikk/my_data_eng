@@ -28,7 +28,7 @@ def validate_bmi_cleaned(data_processed):
     is_data_clean = bmi_violations == 0
 
     if is_data_clean:
-        print(f"В Dataset НЕТ записей с BMI < 15):")
+        print(f"В Dataset НЕТ записей с BMI < 15 :)")
     else:
         print(f"!!!! В Dataset ЕСТЬ записи с BMI < 15) !!!!")
         print(f"Количество таких записей: {bmi_violations}")
@@ -142,9 +142,9 @@ def validate_data_types(data_processed):
     is_data_clean = all(type_checks)
 
     if is_data_clean:
-        print("Все типы данных преобразованы правильно")
+        print("Все типы данных преобразованы правильно ✅")
     else:
-        print(f"Обнаружены ошибки в {len(incorrect_types)} колонках:")
+        print(f"❌ Обнаружены ошибки в {len(incorrect_types)} колонках:")
         for col in incorrect_types:
             print(f"  - {col}")
 
